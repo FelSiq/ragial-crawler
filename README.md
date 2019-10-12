@@ -9,7 +9,7 @@ RagialCrawler is a simple Python (version 3.5) script which automatically search
 # Run
 First, install the dependencies using pip:
 ```
-# pip install -Ur requirements.txt
+pip install -Ur requirements.txt
 ```
 
 Then, to run the script, type on your terminal/console which follows:
