@@ -35,7 +35,7 @@ myCustomHeader = {'User-Agent': 'Mozilla/5.0'}
 dataRefreshTime = 300  # This time should be in seconds
 requestDelay = 4.0  # Delay, in seconds, of a delay between each request on Ragial.
 # IMPORTANT: low values (< 4.0s) tend to NOT work, resulting on a (Too many requests) 429 error.
-maxRagialSearchPages = 99  # Max number of search result pages that script must goes into. Numbers smaller than 1 is nonsense.
+maxRagialSearchPages = 3  # Max number of search result pages that script must goes into. Numbers smaller than 1 is nonsense.
 interestThreshold = -0.2  # Threshold of proportion, in order to print shop information alongside the item if prop is smaller than it
 removeQueryOnItemName = True  # Remove the query at the item name, in order to output be more clean
 appendFullLink = False  # Should the entire item URL be appended on the table, or just the ID code?
@@ -106,9 +106,15 @@ RegexFindNextPage = re.compile(r'<a href="' + ragialSearchLink + serverName +
                                '/' + query + '/' + r'\w">Next</a>')
 # 4.5 Detect everything that is not a base 10 number
 RegexOnlyAllowNumbers = re.compile(r'[^0-9]')
-# 4.6 Get item best price shop name, shop url and exact coordinates
+# 4.6 Get item best price shop url
+RegexGetItemShopLink = re.compile(
+    r'<tr\s*class="odd">\s*<td[^>]*>\s*<a\s*href="([^"]+)">Vending Now</a>'
+)
+RegexGetItemShopName = re.compile(
+    r'<h2><img\s*src="http://ragial\.org/res/shop_vend\.png"[^/]*/>([^<]+)</h2>'
+)
 RegexGetItemShopCoord = re.compile(
-    b'<a href="([^"]+)">\s*<[^>]+>\s*([^<]*)\s*</a>\s*<[^>]+>\s*([^<]*)\s*</div>'
+    r'<dd>Location:</dd><dt><input.*value="([^"]+)"></dt>'
 )
 
 # -------------------- END OF SECTION (4)
@@ -233,16 +239,25 @@ def _requestItemCoordinates(item):
     time.sleep(requestDelay)
 
     try:
-        request = Request(
-            ragialItemMarketLink + serverName + '/' + item,
-            headers=myCustomHeader)
-        bestPriceShop = RegexGetItemShopCoord.search(urlopen(request).read())
-        if bestPriceShop:
-            return list(
-                reversed([
-                    i.decode(encoding='utf-8') for i in bestPriceShop.groups()
-                ]))
-        return errorValues
+        fullItemLink = ragialItemMarketLink + serverName + '/' + item
+
+        request = Request(fullItemLink, headers=myCustomHeader)
+        itemPageContent = urlopen(request).read().decode('utf-8')
+
+        bestPriceShopLink = RegexGetItemShopLink.search(itemPageContent).group(1)
+
+        shopRequest = Request(bestPriceShopLink, headers=myCustomHeader)
+        shopPageContent = urlopen(shopRequest).read().decode('utf-8')
+
+        bestPriceShopName = RegexGetItemShopName.search(shopPageContent).group(1)
+        bestPriceShopCoord = RegexGetItemShopCoord.search(shopPageContent).group(1)
+
+        return [
+            bestPriceShopCoord,
+            bestPriceShopName,
+            bestPriceShopLink,
+        ]
+
     except:
         return errorValues
 
@@ -388,7 +403,7 @@ def main():
 
                                 try:
                                     # Mount full item link and make a requisition to Ragial server
-                                    fullItemLink = 'http://ragi.al/item/' + serverName + '/' + item
+                                    fullItemLink = ragialItemMarketLink + serverName + '/' + item
                                     itemRequest = Request(
                                         fullItemLink, headers=myCustomHeader)
 
@@ -427,7 +442,7 @@ def main():
                                 except BaseException as exc:
                                     print(
                                         Fore.RED + 'Error on getting',
-                                        '\'http://ragi.al/item/' + serverName +
+                                        ragialItemLink + serverName +
                                         '/' + item + '\' (error: ' + repr(exc)
                                         + ') data.')
 
