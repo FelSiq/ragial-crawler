@@ -29,7 +29,7 @@ python ragialCrawler.py
 - It has a four (4) seconds delay between each next page search request, in order to avoid (Too Many Requests) 429 error on the scenario when all items of the current page are already on the memoization structure.
 
 # Output
-<img src="/images/output_sample.png" width="800" height="800"/>
+<img src="/images/output_sample.png"/>
 
 The output is a Data Frame, which column order follows the specified order:
 - Proportion: calculated by ((Best Ragial Price)/(Average Item Price (7 day analysis)) - 1.0) * 100.0
