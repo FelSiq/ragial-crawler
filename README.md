@@ -1,5 +1,5 @@
 # RagialCrawler
-RagialCrawler is a simple Python (version 3.5) script which automatically search all costumes-like items on Ragial default to on iRO-Odin server (but has easy support to all other Ragial supported servers), and get all relevant economic data from each found item. Then, at the end, it does print all the found items sorted by the proportion of Best Current Price Found and Short (7D) Average Item Price.
+RagialCrawler is a simple Python (version 3.5) script which automatically search all costumes-like items on Ragial default to on iRO-Renewal server (but has easy support to all other Ragial supported servers), and get all relevant economic data from each found item. Then, at the end, it does print all the found items sorted by the proportion of Best Current Price Found and Short (7D) Average Item Price.
 
 # Dependencies
 - Python 3.5 or a greater version
@@ -7,9 +7,14 @@ RagialCrawler is a simple Python (version 3.5) script which automatically search
 - Other libraries should not be a problem.
 
 # Run
-Just type on your terminal/console which follows:
+First, install the dependencies using pip:
 ```
-$ python3 ragialCrawler.py
+# pip install -Ur requirements.txt
+```
+
+Then, to run the script, type on your terminal/console which follows:
+```
+python ragialCrawler.py
 ```
 
 # Functionallity
@@ -28,8 +33,3 @@ The output is a Data Frame, which column order follows the specified order:
 - Best Ragial price at moment
 - Average Price on a seven (7) days analysis
 - Ragial item link
-
-# For future Updates, if they ever happen
-- Official script extern documentation
-- And on-the-fly decided features.
-- Or nothing, at all.
