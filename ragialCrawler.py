@@ -35,7 +35,7 @@ myCustomHeader = {'User-Agent': 'Mozilla/5.0'}
 dataRefreshTime = 300  # This time should be in seconds
 requestDelay = 4.0  # Delay, in seconds, of a delay between each request on Ragial.
 # IMPORTANT: low values (< 4.0s) tend to NOT work, resulting on a (Too many requests) 429 error.
-maxRagialSearchPages = 3  # Max number of search result pages that script must goes into. Numbers smaller than 1 is nonsense.
+maxRagialSearchPages = 99  # Max number of search result pages that script must goes into. Numbers smaller than 1 is nonsense.
 interestThreshold = -0.2  # Threshold of proportion, in order to print shop information alongside the item if prop is smaller than it
 removeQueryOnItemName = True  # Remove the query at the item name, in order to output be more clean
 appendFullLink = False  # Should the entire item URL be appended on the table, or just the ID code?
